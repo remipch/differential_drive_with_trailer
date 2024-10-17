@@ -25,24 +25,25 @@ DT = 0.1 # in seconds
 WA = 0.4        # Robot width
 LA1 = 0.7       # Distance between center and robot front
 LA2 = 0.1       # Distance between center and robot back
-LA3 = 0.1       # Distance between hitch point and robot back
+LA3 = 0.2       # Distance between hitch point and robot back
 LA = LA2 + LA3  # Distance betwwen hitch point and robot center
-
-# Initial robot pose
-XA0 = 0
-YA0 = -5
-THA0 = 1.57     # not exactly pi/2 for visual purpose only (no integer pixels)
 
 # Trailer dimensions (object B), center is the wheels middle point
 WB = 0.4
 LB1 = 0.1       # From back to center
 LB2 = 0.8       # From center to front
-LB3 = 0.3       # From front to hitch point
+LB3 = 0.2       # From front to hitch point
 LB = LB2 + LB3  # From center to hitch point
 
+# Initial pose
+THB0 = 0.5
+XA0 = 1
+YA0 = -2
+THA0 = 1.57     # not exactly pi/2 for visual purpose only (no integer pixels)
+
 # Goal
-XB_GOAL = -2
-YB_GOAL = 0
+XB_GOAL = -0.1
+YB_GOAL = 2
 M_GOAL = 0.1    # Margins around trailer
 
 class Phase(Enum):
@@ -62,7 +63,7 @@ class State:
         self.dthA = 0           # Rotation speed
         self.vA = 0             # Linear speed
         self.dvA = 0            # Linear acceleration
-        self.thB = 0
+        self.thB = THB0
 
         # Computed variables
         self.dxA = 0
@@ -151,7 +152,7 @@ for i in range(1000):
         if state.yA + LA1 > YB_GOAL :
             phase = Phase.TURN_RIGHT
     if phase == Phase.TURN_RIGHT:
-        state.dthA = -1
+        state.dthA = -0.8
         if state.thA < 0:
             phase = Phase.STOP
     if phase == Phase.STOP:
@@ -160,7 +161,7 @@ for i in range(1000):
         if state.vA < 0:
             phase = Phase.GO_BACKWARD
     if phase == Phase.GO_BACKWARD:
-        state.dvA = -0.2
+        state.dvA = -0.4
         state.dthA = 0
         if state.vA < -0.2:
             phase = Phase.PARK_BACKWARD
@@ -170,6 +171,8 @@ for i in range(1000):
         if state.xA < XB_GOAL:
             phase = Phase.PARKED
     if phase == Phase.PARKED:
+        state.dthA = 0
+        state.vA = 0
         state.dvA = 0
 
     state.update()
