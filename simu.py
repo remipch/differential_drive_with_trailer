@@ -14,26 +14,27 @@ LINE_COLOR = (5, 5, 5)
 
 FRAME_DURATION_MS = 0  # (set 0 to wait for a key press)
 
-DT = 0.1 # in second
+DT = 0.1 # in seconds
 
-E = 0.4
-LA1 = 0.7
-LA2 = 0.1
-LA3 = 0.1
-LA = LA2 + LA3
+# Dimensions in meters
+RW = 0.4       # Robot width
+LA1 = 0.7       # Distance between center (wheels middle point) and robot front
+LA2 = 0.1       # Distance between center and robot back
+LA3 = 0.1       # Distance between hitch point and robot back
+LA = LA2 + LA3  # Distance betwwen hitch and robot center
 
 ROBOT_LINES = [
-    [[-LA2, E/2], [LA1 - E/3, E/2]],
-    [[LA1 - E/3, E/2], [LA1, 0]],
-    [[LA1, 0], [LA1 - E/3, -E/2]],
-    [[LA1 - E/3, -E/2], [-LA2, -E/2]],
-    [[-LA2, -E/2], [-LA2, E/2]],
+    [[-LA2, RW/2], [LA1 - RW/3, RW/2]],
+    [[LA1 - RW/3, RW/2], [LA1, 0]],
+    [[LA1, 0], [LA1 - RW/3, -RW/2]],
+    [[LA1 - RW/3, -RW/2], [-LA2, -RW/2]],
+    [[-LA2, -RW/2], [-LA2, RW/2]],
+    [[-LA,0], [-LA2,0]],
 ]
 
 def drawLines(lines, x, y, theta):
     rotation = np.array([[math.cos(theta), math.sin(theta)], [-math.sin(theta), math.cos(theta)]])
     for line in lines:
-        # print(f"line {line}", flush=True)
         points = np.array(line, np.float32)
         pt1 = points[0].T.dot(rotation).T + np.float32((x, y))
         pt2 = points[1].T.dot(rotation).T + np.float32((x, y))
@@ -41,8 +42,6 @@ def drawLines(lines, x, y, theta):
         pt2 *= np.float32((PIXEL_PER_METER, PIXEL_PER_METER))
         pt1[1] = IMAGE_HEIGHT - pt1[1]
         pt2[1] = IMAGE_HEIGHT - pt2[1]
-        # print(f"pt1: {pt1}", flush=True)
-        # print(f"pt2: {pt2}", flush=True)
         cv.line(
             image,
             np.int32(pt1),
