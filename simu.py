@@ -5,11 +5,11 @@ from math import pi, cos, sin, tan
 from enum import Enum
 
 # Output image resolution
-IMAGE_WIDTH = 1000
+IMAGE_WIDTH = 800
 IMAGE_HEIGHT = 800
 
 # Image scale (conversion from meters to pixels)
-PIXEL_PER_METER = 50
+PIXEL_PER_METER = 100
 
 BACKGROUND_COLOR = (255, 255, 255)
 LINE_COLOR = (5, 5, 5)
