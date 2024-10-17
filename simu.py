@@ -40,6 +40,11 @@ LB2 = 0.8       # From center to front
 LB3 = 0.3       # From front to hitch point
 LB = LB2 + LB3  # From center to hitch point
 
+# Goal
+XB_GOAL = -2
+YB_GOAL = 0
+M_GOAL = 0.1    # Margins around trailer
+
 class Phase(Enum):
     GO_FRONTWARD= 0
     TURN_RIGHT = 1
@@ -134,10 +139,10 @@ for i in range(1000):
 
     if phase==Phase.GO_FRONTWARD:
         state.vA = 1
-        if state.yA > 5:
+        if state.yA + LA1 > YB_GOAL :
             phase = Phase.TURN_RIGHT
     if phase == Phase.TURN_RIGHT:
-        state.dthA = -0.5
+        state.dthA = -1
         if state.thA < 0:
             phase = Phase.STOP
     if phase == Phase.STOP:
@@ -153,7 +158,7 @@ for i in range(1000):
     if phase == Phase.PARK_BACKWARD:
         # TODO : control law
         state.dvA = 0
-        if state.xA < 5:
+        if state.xA < XB_GOAL:
             phase = Phase.PARKED
     if phase == Phase.PARKED:
         state.dvA = 0
