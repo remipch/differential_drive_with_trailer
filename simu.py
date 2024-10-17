@@ -117,6 +117,9 @@ def drawTrailer(x, y, theta):
 def clearImage():
     cv.rectangle(image, (0, 0), (IMAGE_WIDTH, IMAGE_HEIGHT), BACKGROUND_COLOR, cv.FILLED)
 
+def printPhase(phase):
+    cv.putText(image, phase.name, (10, 30), cv.FONT_HERSHEY_SIMPLEX, 1, LINE_COLOR, 2)
+
 image = np.zeros(shape=[IMAGE_HEIGHT, IMAGE_WIDTH, 3], dtype=np.uint8)
 phase = Phase.GO_FRONTWARD
 state = State()
@@ -146,6 +149,7 @@ for i in range(1000):
     state.update()
     drawRobot(state.xA, state.yA, state.thA)
     drawTrailer(state.xB, state.yB, state.thB)
+    printPhase(phase)
 
     cv.imwrite(f"output/img{i:03d}.png",image)
     cv.imshow("differential drive robot", image)
