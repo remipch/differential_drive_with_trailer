@@ -40,6 +40,7 @@ class Phase(Enum):
     STOP = 2
     GO_BACKWARD = 3
     PARK_BACKWARD = 4
+    PARKED = 5
 
 class State:
     def __init__(self):
@@ -141,10 +142,17 @@ for i in range(1000):
         if state.vA < 0:
             phase = Phase.GO_BACKWARD
     if phase == Phase.GO_BACKWARD:
-        state.dvA = -0.5
+        state.dvA = -0.2
         state.dthA = 0
-        if state.vA < 0.5:
+        if state.vA < -0.2:
             phase = Phase.PARK_BACKWARD
+    if phase == Phase.PARK_BACKWARD:
+        # TODO : control law
+        state.dvA = 0
+        if state.xA < 5:
+            phase = Phase.PARKED
+    if phase == Phase.PARKED:
+        state.dvA = 0
 
     state.update()
     drawRobot(state.xA, state.yA, state.thA)
