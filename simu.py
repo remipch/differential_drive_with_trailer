@@ -32,6 +32,28 @@ LB2 = 0.8       # From center to front
 LB3 = 0.3       # From front to hitch point
 LB = LB2 + LB3  # From center to hitch point
 
+class State:
+    def __init__(self):
+        # Minimal state
+        self.xA = 0
+        self.yA = 0
+        self.thA = math.pi/2
+        self.dthA = 0           # Rotation speed
+        self.vA = 0             # Linear speed
+        self.dvA = 0            # Linear acceleration
+        self.thB = math.pi/3
+
+        # Computed variables from previous minimal state
+        self.dxA = 0
+        self.dyA = 0
+        self.xB = 0
+        self.yB = 0
+        self.dthB = 0
+
+    # Compute secondary variables from minimal state variables
+    def update(self):
+        self.dxA =
+
 def drawLines(lines, x, y, theta):
     rotation = np.array([[math.cos(theta), math.sin(theta)], [-math.sin(theta), math.cos(theta)]])
     for line in lines:
