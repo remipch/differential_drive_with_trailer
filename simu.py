@@ -139,10 +139,6 @@ def drawGoal():
 def clearImage():
     cv.rectangle(image, (0, 0), (IMAGE_WIDTH, IMAGE_HEIGHT), BACKGROUND_COLOR, cv.FILLED)
 
-def printObj(obj):
-    for key, value in vars(obj).items():
-        print(f"{key}: {value:.3f}")
-
 def printText(text, line):
     cv.putText(image, text, (15, 30+line*35), cv.FONT_HERSHEY_SIMPLEX, 1, LINE_COLOR, 1)
 
@@ -155,8 +151,6 @@ def printInfo(phase, time, state):
         line += 1
 
 def backwardParkingRegulation(state):
-    printObj(state)
-
     yB_error = state.yB - YB_GOAL
     thB_setpoint = atan(yB_error)
     dthB = K * (thB_setpoint - state.thB)
