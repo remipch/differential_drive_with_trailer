@@ -83,10 +83,7 @@ for i in range(100):
 
     drawTrailer(1+t,3, -i/50)
 
-    cv.imwrite(
-        f"output/img{i:03d}.png",
-        image,
-    )
+    cv.imwrite(f"output/img{i:03d}.png",image)
     cv.imshow("differential drive robot", image)
 
     # Wait and test escape key
