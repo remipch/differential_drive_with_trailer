@@ -19,15 +19,21 @@ FRAME_DURATION_MS = 0  # (set 0 to wait for a key press)
 DT = 0.1 # in seconds
 
 # Dimensions in meters
+# World origin is at image center
 
-# Robot (object A), center is the wheels middle point
+# Robot dimensions (object A), center is the wheels middle point
 WA = 0.4        # Robot width
 LA1 = 0.7       # Distance between center and robot front
 LA2 = 0.1       # Distance between center and robot back
 LA3 = 0.1       # Distance between hitch point and robot back
 LA = LA2 + LA3  # Distance betwwen hitch point and robot center
 
-# Trailer (object B), center is the wheels middle point
+# Initial robot pose
+XA0 = 0
+YA0 = -5
+THA0 = 1.57     # not exactly pi/2 for visual purpose only (no integer pixels)
+
+# Trailer dimensions (object B), center is the wheels middle point
 WB = 0.4
 LB1 = 0.1       # From back to center
 LB2 = 0.8       # From center to front
@@ -45,9 +51,9 @@ class Phase(Enum):
 class State:
     def __init__(self):
         # Minimal state
-        self.xA = IMAGE_WIDTH/(2*PIXEL_PER_METER)
-        self.yA = 2
-        self.thA = 1.6
+        self.xA = XA0
+        self.yA = YA0
+        self.thA = THA0
         self.dthA = 0           # Rotation speed
         self.vA = 0             # Linear speed
         self.dvA = 0            # Linear acceleration
