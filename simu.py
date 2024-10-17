@@ -88,14 +88,12 @@ def drawLines(lines, x, y, theta):
         points = np.array(line, np.float32)
         pt1 = points[0].T.dot(rotation).T + np.float32((x, y))
         pt2 = points[1].T.dot(rotation).T + np.float32((x, y))
-        pt1 *= np.float32((PIXEL_PER_METER, PIXEL_PER_METER))
-        pt2 *= np.float32((PIXEL_PER_METER, PIXEL_PER_METER))
-        pt1[1] = IMAGE_HEIGHT - pt1[1]
-        pt2[1] = IMAGE_HEIGHT - pt2[1]
+        scale = np.float32((PIXEL_PER_METER, -PIXEL_PER_METER))
+        offset = np.float32((IMAGE_WIDTH/2, IMAGE_HEIGHT/2))
         cv.line(
             image,
-            np.int32(pt1),
-            np.int32(pt2),
+            np.int32(offset + pt1 * scale),
+            np.int32(offset + pt2 * scale),
             LINE_COLOR,
             lineType=cv.LINE_AA,
         )
