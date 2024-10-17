@@ -1,7 +1,7 @@
 import cv2 as cv
 import numpy as np
 import math
-from math import pi, cos, sin, tan
+from math import pi, cos, sin, atan
 from enum import Enum
 
 # Output image resolution
@@ -45,6 +45,9 @@ THA0 = 1.57     # not exactly pi/2 for visual purpose only (no integer pixels)
 XB_GOAL = -0.1
 YB_GOAL = 2
 M_GOAL = 0.1    # Margins around trailer
+
+# Regul (proportional gain), depends on linear speed
+K = 0.5
 
 class Phase(Enum):
     GO_FRONTWARD= 0
@@ -151,6 +154,15 @@ def printInfo(phase, time, state):
         printText(f"{key}: {value:.3f}", line)
         line += 1
 
+def backwardParkingRegulation(state):
+    printObj(state)
+
+    yB_error = state.yB - YB_GOAL
+    thB_setpoint = atan(yB_error)
+    dthB = K * (thB_setpoint - state.thB)
+    state.dthA = (dthB * LB + state.dxA * sin(state.thB) - state.dyA * cos(state.thB)) / \
+                (LA * (sin(state.thA) * sin(state.thB) - cos(state.thA) * cos(state.thB)))
+
 image = np.zeros(shape=[IMAGE_HEIGHT, IMAGE_WIDTH, 3], dtype=np.uint8)
 phase = Phase.GO_FRONTWARD
 state = State()
@@ -178,9 +190,9 @@ for i in range(1000):
         if state.vA < -0.2:
             phase = Phase.PARK_BACKWARD
     if phase == Phase.PARK_BACKWARD:
-        # TODO : control law
+        backwardParkingRegulation(state)
         state.dvA = 0
-        if state.xA < XB_GOAL:
+        if state.xB < XB_GOAL:
             phase = Phase.PARKED
     if phase == Phase.PARKED:
         state.dthA = 0
