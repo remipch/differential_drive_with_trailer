@@ -2,6 +2,7 @@ import cv2 as cv
 import numpy as np
 import math
 from math import pi, cos, sin, tan
+from enum import Enum
 
 # Output image resolution
 IMAGE_WIDTH = 1000
@@ -32,6 +33,13 @@ LB1 = 0.1       # From back to center
 LB2 = 0.8       # From center to front
 LB3 = 0.3       # From front to hitch point
 LB = LB2 + LB3  # From center to hitch point
+
+class Phase(Enum):
+    GO_FRONTWARD= 0
+    TURN_RIGHT = 1
+    STOP = 2
+    GO_BACKWARD = 3
+    PARK_BACKWARD = 4
 
 class State:
     def __init__(self):
@@ -107,21 +115,34 @@ def drawTrailer(x, y, theta):
     drawLines(TRAILER_LINES, x, y, theta)
 
 image = np.zeros(shape=[IMAGE_HEIGHT, IMAGE_WIDTH, 3], dtype=np.uint8)
-
+phase = Phase.GO_FRONTWARD
 state = State()
 
-state.vA = 1
-
-for i in range(100):
-    t = i * DT
-
-    state.update()
-
+for i in range(1000):
     # Clear image
     cv.rectangle(image, (0, 0), (IMAGE_WIDTH, IMAGE_HEIGHT), BACKGROUND_COLOR, cv.FILLED)
 
-    drawRobot(state.xA, state.yA, state.thA)
+    if phase==Phase.GO_FRONTWARD:
+        state.vA = 1
+        if state.yA > 5:
+            phase = Phase.TURN_RIGHT
+    if phase == Phase.TURN_RIGHT:
+        state.dthA = -0.5
+        if state.thA < 0:
+            phase = Phase.STOP
+    if phase == Phase.STOP:
+        state.dvA = -0.6
+        state.dthA = 0
+        if state.vA < 0:
+            phase = Phase.GO_BACKWARD
+    if phase == Phase.GO_BACKWARD:
+        state.dvA = -0.5
+        state.dthA = 0
+        if state.vA < 0.5:
+            phase = Phase.PARK_BACKWARD
 
+    state.update()
+    drawRobot(state.xA, state.yA, state.thA)
     drawTrailer(state.xB, state.yB, state.thB)
 
     cv.imwrite(f"output/img{i:03d}.png",image)
