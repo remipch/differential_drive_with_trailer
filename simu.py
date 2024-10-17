@@ -1,6 +1,7 @@
 import cv2 as cv
 import numpy as np
 import math
+from math import pi, cos, sin, tan
 
 # Output image resolution
 IMAGE_WIDTH = 1000
@@ -35,27 +36,39 @@ LB = LB2 + LB3  # From center to hitch point
 class State:
     def __init__(self):
         # Minimal state
-        self.xA = 0
-        self.yA = 0
-        self.thA = math.pi/2
+        self.xA = IMAGE_WIDTH/(2*PIXEL_PER_METER)
+        self.yA = 2
+        self.thA = 1.6
         self.dthA = 0           # Rotation speed
         self.vA = 0             # Linear speed
         self.dvA = 0            # Linear acceleration
-        self.thB = math.pi/3
+        self.thB = 0
 
-        # Computed variables from previous minimal state
+        # Computed variables
         self.dxA = 0
         self.dyA = 0
         self.xB = 0
         self.yB = 0
         self.dthB = 0
 
-    # Compute secondary variables from minimal state variables
     def update(self):
-        self.dxA =
+        self.vA += self.dvA * DT
+        self.dxA = self.vA * cos(self.thA)
+        self.dyA = self.vA * sin(self.thA)
+        self.xA += self.dxA * DT
+        self.yA += self.dyA * DT
+        self.thA += self.dthA * DT
+        dxH = self.dxA + LA * self.dthA * sin(self.thA)
+        dyH = self.dyA - LA * self.dthA * cos(self.thA)
+        # dxB = dxH + LB * self.dthB * sin(self.thB)
+        # dyB = dyH - LB * self.dthB * cos(self.thB)
+        self.dthB = (-dxH * sin(self.thB) + dyH * cos(self.thB)) / LB
+        self.thB += self.dthB * DT
+        self.xB = self.xA - LA * cos(self.thA) - LB * cos(self.thB)
+        self.yB = self.yA - LA * sin(self.thA) - LB * sin(self.thB)
 
 def drawLines(lines, x, y, theta):
-    rotation = np.array([[math.cos(theta), math.sin(theta)], [-math.sin(theta), math.cos(theta)]])
+    rotation = np.array([[cos(theta), sin(theta)], [-sin(theta), cos(theta)]])
     for line in lines:
         points = np.array(line, np.float32)
         pt1 = points[0].T.dot(rotation).T + np.float32((x, y))
@@ -95,15 +108,21 @@ def drawTrailer(x, y, theta):
 
 image = np.zeros(shape=[IMAGE_HEIGHT, IMAGE_WIDTH, 3], dtype=np.uint8)
 
+state = State()
+
+state.vA = 1
+
 for i in range(100):
     t = i * DT
+
+    state.update()
 
     # Clear image
     cv.rectangle(image, (0, 0), (IMAGE_WIDTH, IMAGE_HEIGHT), BACKGROUND_COLOR, cv.FILLED)
 
-    drawRobot(1+t,1, i/50)
+    drawRobot(state.xA, state.yA, state.thA)
 
-    drawTrailer(1+t,3, -i/50)
+    drawTrailer(state.xB, state.yB, state.thB)
 
     cv.imwrite(f"output/img{i:03d}.png",image)
     cv.imshow("differential drive robot", image)
