@@ -25,6 +25,12 @@ LA2 = 0.1       # Distance between center and robot back
 LA3 = 0.1       # Distance between hitch point and robot back
 LA = LA2 + LA3  # Distance betwwen hitch point and robot center
 
+# Trailer (object B), center is the wheels middle point
+WB = 0.4
+LB1 = 0.1       # From back to center
+LB2 = 0.8       # From center to front
+LB3 = 0.3       # From front to hitch point
+LB = LB2 + LB3  # From center to hitch point
 
 def drawLines(lines, x, y, theta):
     rotation = np.array([[math.cos(theta), math.sin(theta)], [-math.sin(theta), math.cos(theta)]])
@@ -55,6 +61,15 @@ def drawRobot(x, y, theta):
     ]
     drawLines(ROBOT_LINES, x, y, theta)
 
+def drawTrailer(x, y, theta):
+    TRAILER_LINES = [
+        [[-LB1, WB/2], [LB2, WB/2]],
+        [[LB2, WB/2], [LB2, -WB/2]],
+        [[LB2, -WB/2], [-LB1, -WB/2]],
+        [[-LB1, -WB/2], [-LB1, WB/2]],
+        [[LB2,0], [LB,0]],
+    ]
+    drawLines(TRAILER_LINES, x, y, theta)
 
 image = np.zeros(shape=[IMAGE_HEIGHT, IMAGE_WIDTH, 3], dtype=np.uint8)
 
@@ -65,6 +80,8 @@ for i in range(100):
     cv.rectangle(image, (0, 0), (IMAGE_WIDTH, IMAGE_HEIGHT), BACKGROUND_COLOR, cv.FILLED)
 
     drawRobot(1+t,1, i/50)
+
+    drawTrailer(1+t,3, -i/50)
 
     cv.imwrite(
         f"output/img{i:03d}.png",
