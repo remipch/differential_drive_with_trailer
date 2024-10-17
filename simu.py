@@ -127,9 +127,9 @@ def drawTrailer(x, y, theta):
 
 def drawGoal():
     GOAL_LINES = [
-        [[LB1 - M_GOAL, WB/2 + M_GOAL], [LB2 + M_GOAL, WB/2 + M_GOAL]],
-        [[LB1 - M_GOAL, WB/2 + M_GOAL], [LB1 - M_GOAL, -WB/2 - M_GOAL]],
-        [[LB1 - M_GOAL, -WB/2 - M_GOAL], [LB2 + M_GOAL, -WB/2 - M_GOAL]],
+        [[-LB1 - M_GOAL, WB/2 + M_GOAL], [LB2, WB/2 + M_GOAL]],
+        [[-LB1 - M_GOAL, WB/2 + M_GOAL], [-LB1 - M_GOAL, -WB/2 - M_GOAL]],
+        [[-LB1 - M_GOAL, -WB/2 - M_GOAL], [LB2, -WB/2 - M_GOAL]],
     ]
     drawLines(GOAL_LINES, XB_GOAL, YB_GOAL, 0)
 
