@@ -114,13 +114,15 @@ def drawTrailer(x, y, theta):
     ]
     drawLines(TRAILER_LINES, x, y, theta)
 
+def clearImage():
+    cv.rectangle(image, (0, 0), (IMAGE_WIDTH, IMAGE_HEIGHT), BACKGROUND_COLOR, cv.FILLED)
+
 image = np.zeros(shape=[IMAGE_HEIGHT, IMAGE_WIDTH, 3], dtype=np.uint8)
 phase = Phase.GO_FRONTWARD
 state = State()
 
 for i in range(1000):
-    # Clear image
-    cv.rectangle(image, (0, 0), (IMAGE_WIDTH, IMAGE_HEIGHT), BACKGROUND_COLOR, cv.FILLED)
+    clearImage()
 
     if phase==Phase.GO_FRONTWARD:
         state.vA = 1
