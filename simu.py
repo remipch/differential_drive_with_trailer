@@ -50,7 +50,7 @@ M_GOAL = 0.1    # Margins around trailer
 K = 0.5
 
 class Phase(Enum):
-    GO_FRONTWARD= 0
+    GO_FORWARD= 0
     TURN_RIGHT = 1
     STOP = 2
     GO_BACKWARD = 3
@@ -158,14 +158,14 @@ def backwardParkingRegulation(state):
                 (LA * (sin(state.thA) * sin(state.thB) - cos(state.thA) * cos(state.thB)))
 
 image = np.zeros(shape=[IMAGE_HEIGHT, IMAGE_WIDTH, 3], dtype=np.uint8)
-phase = Phase.GO_FRONTWARD
+phase = Phase.GO_FORWARD
 state = State()
 
-for i in range(1000):
+for i in range(170):
     clearImage()
     drawGoal()
 
-    if phase==Phase.GO_FRONTWARD:
+    if phase==Phase.GO_FORWARD:
         state.vA = 1
         if state.yA + LA1 > YB_GOAL :
             phase = Phase.TURN_RIGHT
