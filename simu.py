@@ -124,6 +124,14 @@ def drawTrailer(x, y, theta):
     ]
     drawLines(TRAILER_LINES, x, y, theta)
 
+def drawGoal():
+    GOAL_LINES = [
+        [[LB1 - M_GOAL, WB/2 + M_GOAL], [LB2 + M_GOAL, WB/2 + M_GOAL]],
+        [[LB1 - M_GOAL, WB/2 + M_GOAL], [LB1 - M_GOAL, -WB/2 - M_GOAL]],
+        [[LB1 - M_GOAL, -WB/2 - M_GOAL], [LB2 + M_GOAL, -WB/2 - M_GOAL]],
+    ]
+    drawLines(GOAL_LINES, XB_GOAL, YB_GOAL, 0)
+
 def clearImage():
     cv.rectangle(image, (0, 0), (IMAGE_WIDTH, IMAGE_HEIGHT), BACKGROUND_COLOR, cv.FILLED)
 
@@ -136,6 +144,7 @@ state = State()
 
 for i in range(1000):
     clearImage()
+    drawGoal()
 
     if phase==Phase.GO_FRONTWARD:
         state.vA = 1
