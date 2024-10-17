@@ -17,20 +17,14 @@ FRAME_DURATION_MS = 0  # (set 0 to wait for a key press)
 DT = 0.1 # in seconds
 
 # Dimensions in meters
-RW = 0.4       # Robot width
-LA1 = 0.7       # Distance between center (wheels middle point) and robot front
+
+# Robot (object A), center is the wheels middle point
+WA = 0.4        # Robot width
+LA1 = 0.7       # Distance between center and robot front
 LA2 = 0.1       # Distance between center and robot back
 LA3 = 0.1       # Distance between hitch point and robot back
-LA = LA2 + LA3  # Distance betwwen hitch and robot center
+LA = LA2 + LA3  # Distance betwwen hitch point and robot center
 
-ROBOT_LINES = [
-    [[-LA2, RW/2], [LA1 - RW/3, RW/2]],
-    [[LA1 - RW/3, RW/2], [LA1, 0]],
-    [[LA1, 0], [LA1 - RW/3, -RW/2]],
-    [[LA1 - RW/3, -RW/2], [-LA2, -RW/2]],
-    [[-LA2, -RW/2], [-LA2, RW/2]],
-    [[-LA,0], [-LA2,0]],
-]
 
 def drawLines(lines, x, y, theta):
     rotation = np.array([[math.cos(theta), math.sin(theta)], [-math.sin(theta), math.cos(theta)]])
@@ -51,6 +45,14 @@ def drawLines(lines, x, y, theta):
         )
 
 def drawRobot(x, y, theta):
+    ROBOT_LINES = [
+        [[-LA2, WA/2], [LA1 - WA/3, WA/2]],
+        [[LA1 - WA/3, WA/2], [LA1, 0]],
+        [[LA1, 0], [LA1 - WA/3, -WA/2]],
+        [[LA1 - WA/3, -WA/2], [-LA2, -WA/2]],
+        [[-LA2, -WA/2], [-LA2, WA/2]],
+        [[-LA,0], [-LA2,0]],
+    ]
     drawLines(ROBOT_LINES, x, y, theta)
 
 
